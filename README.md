@@ -8,4 +8,15 @@
  * June 2021
  */
  
- 
+ Open both images:
+ ![image](https://user-images.githubusercontent.com/74852180/123587407-152b6400-d79b-11eb-97a4-224754dece39.png)
+
+
+ Run Macro
+![image](https://user-images.githubusercontent.com/74852180/123587377-09d83880-d79b-11eb-9f09-d544632df88c.png)
+
+Drag Image until aligned. Press ok after:
+![image](https://user-images.githubusercontent.com/74852180/123587459-2eccab80-d79b-11eb-940f-c8420513fcc5.png)
+
+Merged Image (Yellow text is aligned red+green):
+![image](https://user-images.githubusercontent.com/74852180/123587625-64719480-d79b-11eb-95c2-abd5098021c6.png)
