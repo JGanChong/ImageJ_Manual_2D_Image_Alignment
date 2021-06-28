@@ -1,0 +1,72 @@
+/*  Allows User to manually align two 2D Images
+ *  
+ *  Macro Instructions:
+ * Open both images and run macro. Select main and secondary image. Once Image appears, drag overlay until they match and press Ok.
+ *  
+ * Macro tested with ImageJ 1.53g, Java 1.8.0_172 (64bit) Windows 10
+ * Macro by Johnny Gan Chong email:behappyftw@g.ucla.edu
+ * June 2021
+ */
+
+//Gets main and secondary image
+list = getList("image.titles");
+Dialog.create("Title");
+Dialog.addChoice("Main Image", list);
+Dialog.addChoice("Secondary Image", list);
+Dialog.show();
+Main = Dialog.getChoice();
+Secondary = Dialog.getChoice();
+
+//Clears Roi and overlays
+roiManager("reset");
+Overlay.clear;
+
+//Generate Reference Image for User to see and match
+selectImage(Secondary);
+run("Duplicate...", "title=REFERENCE");
+run("Invert");
+selectImage(Main);
+run("Add Image...", "image=REFERENCE  x=0 y=0 opacity=20");
+close("REFERENCE");
+selectImage(Main);
+Overlay.show;
+run("To ROI Manager");
+roiManager("Select", 0);
+waitForUser("Drag reference Image until it matches and press OK");
+
+//calculate offset of secondary image and alignment
+Roi.getBounds(x, y, width, height);
+selectImage(Main);
+mwidth = getWidth;
+mheight = getHeight;
+selectImage(Secondary);
+swidth = getWidth;
+sheight = getHeight;
+if (bitDepth() == 24) {
+	newImage("Matchup1", "RGB black", mwidth+x, mheight+y, 1);
+	newImage("Matchup2", "RGB black", mwidth+x, mheight+y, 1);
+}
+else {
+	newImage("Matchup1", bitDepth()+"-bit black", mwidth+x, mheight+y, 1);	
+	newImage("Matchup2", bitDepth()+"-bit black", mwidth+x, mheight+y, 1);	
+}
+
+//Align and merge images
+selectImage(Main);
+Overlay.clear;
+makeRectangle(0, 0, mwidth, mheight);
+run("Copy");
+selectWindow("Matchup1");
+makeRectangle(0, 0, mwidth, mheight);
+run("Paste");
+
+selectImage(Secondary);
+Overlay.clear;
+makeRectangle(0, 0, swidth, sheight);
+run("Copy");
+selectWindow("Matchup2");
+makeRectangle(x, y, swidth, sheight);
+run("Paste");
+
+run("Merge Channels...", "c1=Matchup1 c2=Matchup2 create");
+roiManager("reset");
